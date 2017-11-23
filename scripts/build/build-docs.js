@@ -17,6 +17,16 @@ const parsers = [
   "markdown"
 ];
 
+console.log(process.env)
+const isPullRequest = process.env.PULL_REQUEST === "true";
+const prettierPath = isPullRequest ? "dist" : "node_modules/prettier/";
+
+// --- Build prettier for PR ---
+
+if (isPullRequest) {
+
+}
+
 // --- Docs ---
 
 shell.mkdir("-p", docs);
