@@ -219,6 +219,13 @@ const detailedOptions = normalizeDetailedOptions({
     forwardToApi: true,
     description: "The line length where Prettier will try wrap."
   },
+  "prose-wrap": {
+    type: "boolean",
+    category: CATEGORY_FORMAT,
+    forwardToApi: true,
+    description: "Wrap prose if it exceeds the print width. (markdown)",
+    oppositeDescription: "Do not wrap prose. (markdown)"
+  },
   "range-end": {
     type: "int",
     category: CATEGORY_EDITOR,
@@ -270,6 +277,10 @@ const detailedOptions = normalizeDetailedOptions({
     type: "path",
     forwardToApi: "filepath",
     description: "Path to the file to pretend that stdin comes from."
+  },
+  "support-info": {
+    type: "boolean",
+    description: "Print support information as JSON."
   },
   "tab-width": {
     type: "int",

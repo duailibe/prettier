@@ -19,6 +19,9 @@ var OPTIONS = [
   "parser",
   "semi",
   "useTabs",
+  "insertPragma",
+  "requirePragma",
+  "proseWrap",
   "doc",
   "ast",
   "output2"
@@ -257,6 +260,8 @@ function getCodemirrorMode(options) {
     case "less":
     case "scss":
       return "css";
+    case "markdown":
+      return "markdown";
     default:
       return "jsx";
   }
@@ -288,6 +293,10 @@ function setEditorStyles() {
   inputEditor.setOption("mode", mode);
   outputEditor.setOption("mode", mode);
   output2Editor.setOption("mode", mode);
+
+  inputEditor.setOption("rulers", [
+    { column: options.printWidth, color: "#eeeeee" }
+  ]);
 
   [outputEditor, output2Editor].forEach(function(editor) {
     editor.setOption("rulers", [

@@ -7,6 +7,9 @@
 /.vscode
 /dist
 /website/node_modules
+/website/build
+/website/i18n
+/website/static/lib
 .DS_Store
 coverage
 .idea
