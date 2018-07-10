@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "noResolve": true,
+    "allowJs": true,
+    "checkJs": true,
+    "noEmit": true,
+    "noImplicitAny": true,
+    "lib": ["ES2015"]
+  },
+  "files": [
+    "src/types.d.ts",
+    "src/doc/doc-builders.js",
+    "src/doc/doc-printer.js"
+  ]
+}

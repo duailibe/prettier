@@ -1,5 +1,6 @@
 "use strict";
 
+/** @param {Doc} val */
 function assertDoc(val) {
   /* istanbul ignore if */
   if (
@@ -11,6 +12,10 @@ function assertDoc(val) {
   }
 }
 
+/**
+  @param {Doc[]} parts
+  @return {Doc}
+*/
 function concat(parts) {
   if (process.env.NODE_ENV !== "production") {
     parts.forEach(assertDoc);
@@ -25,6 +30,10 @@ function concat(parts) {
   return { type: "concat", parts };
 }
 
+/**
+  @param {Doc} contents
+  @return {Doc}
+*/
 function indent(contents) {
   if (process.env.NODE_ENV !== "production") {
     assertDoc(contents);
@@ -33,6 +42,11 @@ function indent(contents) {
   return { type: "indent", contents };
 }
 
+/**
+  @param {doc.Alignment} n
+  @param {Doc} contents
+  @return {Doc}
+*/
 function align(n, contents) {
   if (process.env.NODE_ENV !== "production") {
     assertDoc(contents);
@@ -41,6 +55,11 @@ function align(n, contents) {
   return { type: "align", contents, n };
 }
 
+/**
+  @param {Doc} contents
+  @param {doc.GroupOpts} opts
+  @return {Doc}
+*/
 function group(contents, opts) {
   opts = opts || {};
 
@@ -57,18 +76,35 @@ function group(contents, opts) {
   };
 }
 
+/**
+  @param {Doc} contents
+  @return {Doc}
+*/
 function dedentToRoot(contents) {
   return align(-Infinity, contents);
 }
 
+/**
+  @param {Doc} contents
+  @return {Doc}
+*/
 function markAsRoot(contents) {
   return align({ type: "root" }, contents);
 }
 
+/**
+  @param {Doc} contents
+  @return {Doc}
+*/
 function dedent(contents) {
   return align(-1, contents);
 }
 
+/**
+  @param {Doc[]} states
+  @param {doc.GroupOpts} opts
+  @return {Doc}
+*/
 function conditionalGroup(states, opts) {
   return group(
     states[0],
@@ -76,6 +112,10 @@ function conditionalGroup(states, opts) {
   );
 }
 
+/**
+  @param {Doc[]} parts
+  @return {Doc}
+*/
 function fill(parts) {
   if (process.env.NODE_ENV !== "production") {
     parts.forEach(assertDoc);
@@ -84,6 +124,12 @@ function fill(parts) {
   return { type: "fill", parts };
 }
 
+/**
+  @param {Doc} breakContents
+  @param {Doc} flatContents
+  @param {{ groupId?: doc.GroupId }} opts
+  @return {Doc}
+*/
 function ifBreak(breakContents, flatContents, opts) {
   opts = opts || {};
 
@@ -104,6 +150,10 @@ function ifBreak(breakContents, flatContents, opts) {
   };
 }
 
+/**
+  @param {Doc} contents
+  @return {Doc}
+*/
 function lineSuffix(contents) {
   if (process.env.NODE_ENV !== "production") {
     assertDoc(contents);
@@ -111,17 +161,26 @@ function lineSuffix(contents) {
   return { type: "line-suffix", contents };
 }
 
+/** @type {Doc} */
 const lineSuffixBoundary = { type: "line-suffix-boundary" };
+/** @type {Doc} */
 const breakParent = { type: "break-parent" };
+/** @type {Doc} */
 const line = { type: "line" };
+/** @type {Doc} */
 const softline = { type: "line", soft: true };
 const hardline = concat([{ type: "line", hard: true }, breakParent]);
 const literalline = concat([
   { type: "line", hard: true, literal: true },
   breakParent
 ]);
+/** @type {Doc} */
 const cursor = { type: "cursor", placeholder: Symbol("cursor") };
 
+/**
+  @param {string} sep
+  @param {Doc[]} arr
+*/
 function join(sep, arr) {
   const res = [];
 
@@ -136,7 +195,13 @@ function join(sep, arr) {
   return concat(res);
 }
 
+/**
+  @param {Doc} doc
+  @param {number} size
+  @param {number} tabWidth
+*/
 function addAlignmentToDoc(doc, size, tabWidth) {
+  /** @type {Doc} */
   let aligned = doc;
   if (size > 0) {
     // Use indent to add tabs for all the levels of tabs we need

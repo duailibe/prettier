@@ -67,6 +67,7 @@
     "@babel/cli": "7.0.0-beta.49",
     "@babel/core": "7.0.0-beta.49",
     "@babel/preset-env": "7.0.0-beta.49",
+    "@types/node": "6.0.114",
     "babel-loader": "8.0.0-beta.3",
     "benchmark": "2.1.4",
     "builtin-modules": "2.0.0",
