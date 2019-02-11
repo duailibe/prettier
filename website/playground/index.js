@@ -2,6 +2,7 @@ import "codemirror-graphql/mode";
 
 import React from "react";
 import ReactDOM from "react-dom";
+import AnimatedLogo from "@sandhose/prettier-animated-logo";
 
 import Playground from "./Playground";
 import VersionLink from "./VersionLink";
@@ -29,7 +30,11 @@ class App extends React.Component {
     const { loaded, availableOptions, version } = this.state;
 
     if (!loaded) {
-      return "Loading...";
+      return (
+        <div className="loading-wrapper">
+          <AnimatedLogo version="wide" />
+        </div>
+      );
     }
 
     return (

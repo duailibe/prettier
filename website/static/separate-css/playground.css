@@ -1,5 +1,6 @@
 html {
   background-color: #fafafa;
+  /* background-color: #1a2b34; */
   color: #6a6a6a;
   font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto,
     Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue",
@@ -289,3 +290,15 @@ input[type="number"] {
   border-bottom: none;
   border-top-color: #000;
 }
+
+.loading-wrapper {
+  background-color: #1a2b34;
+  flex: 1;
+  text-align: center;
+  padding-top: 80px;
+}
+
+/* .loading-wrapper > svg {
+  height: auto;
+  margin-bottom: 30px;
+} */
