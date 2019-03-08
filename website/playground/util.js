@@ -51,3 +51,27 @@ export function getCodemirrorMode(parser) {
       return "jsx";
   }
 }
+
+export function getIndexPosition(text, indexes) {
+  indexes = indexes.slice();
+  let line = 0;
+  let count = 0;
+  let lineStart = 0;
+  const result = [];
+
+  while (indexes.length) {
+    const index = indexes.shift();
+
+    while (count < index && count < text.length) {
+      if (text[count] === "\n") {
+        line++;
+        lineStart = count;
+      }
+      count++;
+    }
+
+    result.push({ line, pos: count - lineStart });
+  }
+
+  return result;
+}

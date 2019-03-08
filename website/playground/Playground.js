@@ -184,32 +184,42 @@ class Playground extends React.Component {
                     </div>
                   </Sidebar>
                   <div className="editors">
-                    <InputPanel
-                      mode={util.getCodemirrorMode(options.parser)}
-                      ruler={options.printWidth}
-                      value={content}
-                      codeSample={getCodeSample(options.parser)}
-                      overlayStart={options.rangeStart}
-                      overlayEnd={options.rangeEnd}
-                      onChange={this.setContent}
-                    />
+                    <div className="editor">
+                      <InputPanel
+                        mode={util.getCodemirrorMode(options.parser)}
+                        ruler={options.printWidth}
+                        value={content}
+                        codeSample={getCodeSample(options.parser)}
+                        overlayStart={options.rangeStart}
+                        overlayEnd={options.rangeEnd}
+                        onChange={this.setContent}
+                      />
+                    </div>
                     {editorState.showAst ? (
-                      <DebugPanel value={debug.ast || ""} />
+                      <div className="editor">
+                        <DebugPanel value={debug.ast || ""} />
+                      </div>
                     ) : null}
                     {editorState.showDoc ? (
-                      <DebugPanel value={debug.doc || ""} />
+                      <div className="editor">
+                        <DebugPanel value={debug.doc || ""} />
+                      </div>
                     ) : null}
-                    <OutputPanel
-                      mode={util.getCodemirrorMode(options.parser)}
-                      value={formatted}
-                      ruler={options.printWidth}
-                    />
-                    {editorState.showSecondFormat ? (
+                    <div className="editor">
                       <OutputPanel
                         mode={util.getCodemirrorMode(options.parser)}
-                        value={getSecondFormat(formatted, debug.reformatted)}
+                        value={formatted}
                         ruler={options.printWidth}
                       />
+                    </div>
+                    {editorState.showSecondFormat ? (
+                      <div className="editor">
+                        <OutputPanel
+                          mode={util.getCodemirrorMode(options.parser)}
+                          value={getSecondFormat(formatted, debug.reformatted)}
+                          ruler={options.printWidth}
+                        />
+                      </div>
                     ) : null}
                   </div>
                 </div>
@@ -272,9 +282,7 @@ function getReportLink(reportBody) {
 function getSecondFormat(formatted, reformatted) {
   return formatted === ""
     ? ""
-    : formatted === reformatted
-    ? "✓ Second format is unchanged."
-    : reformatted;
+    : formatted === reformatted ? "✓ Second format is unchanged." : reformatted;
 }
 
 export default Playground;
