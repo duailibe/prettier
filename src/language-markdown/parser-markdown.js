@@ -35,6 +35,7 @@ function createParse({ isMDX }) {
           isMDX && { blocks: [mdx.BLOCKS_REGEX] }
         )
       )
+      .use(looseList)
       .use(frontMatter)
       .use(remarkMath)
       .use(isMDX ? mdx.esSyntax : identity)
@@ -46,6 +47,40 @@ function createParse({ isMDX }) {
 
 function identity(x) {
   return x;
+}
+
+function looseList() {
+  const proto = this.Parser.prototype;
+  const originalList = proto.blockTokenizers.list;
+
+  function fixListNodes(value, node, parent) {
+    if (node.type === "listItem") {
+      node.loose = node.spread || value.charAt(value.length - 1) === "\n";
+      if (node.loose) {
+        parent.loose = true;
+      }
+    }
+    return node;
+  }
+
+  proto.blockTokenizers.list = function list(realEat, value, silent) {
+    function eat(subvalue) {
+      const realAdd = realEat(subvalue);
+
+      function add(node, parent) {
+        return realAdd(fixListNodes(subvalue, node, parent), parent);
+      }
+      add.reset = function(node, parent) {
+        return realAdd.reset(fixListNodes(subvalue, node, parent), parent);
+      };
+
+      return add;
+    }
+    eat.now = realEat.now;
+    eat.file = realEat.file;
+
+    return originalList.call(this, eat, value, silent);
+  };
 }
 
 function htmlToJsx() {
