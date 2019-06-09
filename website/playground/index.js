@@ -1,66 +1,73 @@
 import "codemirror-graphql/mode";
 
-import React from "react";
+import React, { useEffect, useState, useRef } from "react";
 import ReactDOM from "react-dom";
 import AnimatedLogo from "@sandhose/prettier-animated-logo";
 
-import Playground from "./Playground";
+import Playground from "./Playground2";
 import VersionLink from "./VersionLink";
-import WorkerApi from "./WorkerApi";
-import { fixPrettierVersion } from "./util";
+import worker from "./worker";
 
-class App extends React.Component {
-  constructor() {
-    super();
-    this.state = { loaded: false };
-    this.worker = new WorkerApi("/worker.js");
-  }
+function App() {
+  const [loaded, setLoaded] = useState(false);
+  const [props, setProps] = useState();
 
-  componentDidMount() {
-    this.worker.getMetadata().then(({ supportInfo, version }) => {
-      this.setState({
-        loaded: true,
-        availableOptions: supportInfo.options.map(augmentOption),
+  useEffect(() => {
+    worker.getMetadata().then(({ supportInfo, version }) => {
+      setProps({
+        worker,
+        availableOptions: getOptionsByName(supportInfo.options),
         version: fixPrettierVersion(version)
       });
+      setLoaded(true);
     });
-  }
+  }, []);
 
-  render() {
-    const { loaded, availableOptions, version } = this.state;
-
-    if (!loaded) {
-      return (
-        <div className="loading-wrapper">
-          <AnimatedLogo version="wide" />
-        </div>
-      );
-    }
-
+  if (!loaded) {
     return (
-      <React.Fragment>
-        <VersionLink version={version} />
-        <Playground
-          worker={this.worker}
-          availableOptions={availableOptions}
-          version={version}
-        />
-      </React.Fragment>
+      <div className="loading-wrapper">
+        <AnimatedLogo version="wide" />
+      </div>
     );
   }
+
+  return (
+    <React.Fragment>
+      <VersionLink version={props.version} />
+      <Playground {...props} />
+    </React.Fragment>
+  );
 }
 
-function augmentOption(option) {
-  if (option.type === "boolean" && option.default === true) {
-    option.inverted = true;
+function fixPrettierVersion(version) {
+  const match = version.match(/^\d+\.\d+\.\d+-pr.(\d+)$/);
+  if (match) {
+    return `pr-${match[1]}`;
+  }
+  return version;
+}
+
+function getOptionsByName(options) {
+  const results = {};
+
+  for (const option of options) {
+    if (option.type === "path") {
+      continue;
+    }
+
+    if (option.type === "boolean" && option.default === true) {
+      option.inverted = true;
+    }
+
+    option.cliName =
+      "--" +
+      (option.inverted ? "no-" : "") +
+      option.name.replace(/([a-z])([A-Z])/g, "$1-$2").toLowerCase();
+
+    results[option.name] = option;
   }
 
-  option.cliName =
-    "--" +
-    (option.inverted ? "no-" : "") +
-    option.name.replace(/([a-z])([A-Z])/g, "$1-$2").toLowerCase();
-
-  return option;
+  return results;
 }
 
 ReactDOM.render(<App />, document.getElementById("root"));

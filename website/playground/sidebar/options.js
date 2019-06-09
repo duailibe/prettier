@@ -36,7 +36,7 @@ export function NumberOption({ option, value, onChange }) {
       min={option.range.start}
       max={option.range.end}
       step={option.range.step}
-      value={value}
+      value={typeof value === 'undefined' ? "" : value}
       onChange={val => onChange(option, val)}
     />
   );

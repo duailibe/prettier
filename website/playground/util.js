@@ -1,18 +1,8 @@
-export function fixPrettierVersion(version) {
-  const match = version.match(/^\d+\.\d+\.\d+-pr.(\d+)$/);
-  if (match) {
-    return `pr-${match[1]}`;
-  }
-  return version;
-}
-
 export function getDefaults(availableOptions, optionNames) {
   const defaults = {};
-  for (const option of availableOptions) {
-    if (optionNames.includes(option.name)) {
-      defaults[option.name] =
-        option.name === "parser" ? "babel" : option.default;
-    }
+  for (const name of optionNames) {
+    defaults[name] =
+      name === "parser" ? "babel" : availableOptions[name].default;
   }
   return defaults;
 }
@@ -37,7 +27,7 @@ export function buildCliArgs(availableOptions, options) {
   return args;
 }
 
-export function getCodemirrorMode(parser) {
+export function getCodeMirrorMode(parser) {
   switch (parser) {
     case "css":
     case "less":

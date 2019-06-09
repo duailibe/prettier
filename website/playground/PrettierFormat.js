@@ -1,40 +1,16 @@
-import React from "react";
+import { useEffect, useState } from "react";
 
-export default class PrettierFormat extends React.Component {
-  constructor() {
-    super();
-    this.state = { formatted: "", debug: {} };
-  }
+import worker from "./worker";
 
-  componentDidMount() {
-    this.format();
-  }
+export default function usePrettierFormat(code, options, ast, doc, reformat) {
+  const [state, setState] = useState({ formatted: "", debug: {} });
 
-  componentDidUpdate(prevProps) {
-    for (const key of ["code", "options", "debugAst", "debugDoc", "reformat"]) {
-      if (prevProps[key] !== this.props[key]) {
-        this.format();
-        break;
-      }
-    }
-  }
+  useEffect(
+    () => {
+      worker.format(code, options, { ast, doc, reformat }).then(setState);
+    },
+    [code, options, ast, doc, reformat]
+  );
 
-  format() {
-    const {
-      worker,
-      code,
-      options,
-      debugAst: ast,
-      debugDoc: doc,
-      reformat
-    } = this.props;
-
-    worker
-      .format(code, options, { ast, doc, reformat })
-      .then(result => this.setState(result));
-  }
-
-  render() {
-    return this.props.children(this.state);
-  }
+  return state;
 }

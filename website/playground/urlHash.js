@@ -21,6 +21,8 @@ export function read() {
 
 export function replace(state) {
   const hash = LZString.compressToEncodedURIComponent(JSON.stringify(state));
+    location.hash = hash;
+    return
   if (
     typeof URL === "function" &&
     typeof history === "object" &&

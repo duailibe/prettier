@@ -1,4 +1,4 @@
-export default function(source) {
+function WorkerApi(source) {
   const worker = new Worker(source);
   let counter = 0;
   const handlers = {};
@@ -38,3 +38,5 @@ export default function(source) {
     postMessage
   };
 }
+
+export default new WorkerApi("/worker.js");

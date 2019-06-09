@@ -6,6 +6,11 @@ import { getIndexPosition } from "./util";
 export default function CodeMirrorEditor(props) {
   const _textarea = useRef();
   const _codeMirror = useRef();
+  const _onChange = useRef();
+
+  useEffect(() => {
+    _onChange.current = props.onChange;
+  }, [props.onChange])
 
   useLayoutEffect(() => {
     const options = Object.assign({}, props);
